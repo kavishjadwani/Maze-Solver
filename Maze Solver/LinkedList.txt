@@ -1,0 +1,72 @@
+  public boolean search()  {  
+      //startLoc exitLoc
+       int mazeRow = this.numRows()+2;
+       int mazeColumn= this.numCols()+2;
+       MazeCoord startLocation = this.getEntryLoc();
+       MazeCoord newStartLocation = new MazeCoord(startLocation.getRow()+1,startLocation.getCol()+1);
+       boolean[][] pathFindingMaze = new boolean[mazeRow][mazeColumn];
+       for(int i = 0;i<mazeColumn;i++){
+           pathFindingMaze[0][i]= true;
+           pathFindingMaze[mazeRow-1][i]=true;
+       }
+       for(int i = 0;i<mazeRow;i++){
+           pathFindingMaze[i][0] = true;
+           pathFindingMaze[i][mazeColumn-1] = true;
+       }
+       for(int i = 1;i<mazeRow-1;i++){
+           for(int j = 1;j<mazeColumn-1;j++){
+               pathFindingMaze[i][j] = this.mazeData[i-1][j-1];
+               
+           }
+       }
+       
+               
+       
+      return (!(isPath(newStartLocation,pathFindingMaze)).isEmpty());  // DUMMY CODE TO GET IT TO COMPILE
+
+   }
+//   private boolean isPath(MazeCoord startLoc,boolean[][] pathMaze){
+    private LinkedList<MazeCoord> isPath(MazeCoord startLoc,boolean[][] pathMaze){
+       LinkedList<MazeCoord> path = new LinkedList<MazeCoord>();
+       boolean success = false; 
+       int xCoord = startLoc.getRow();
+       int yCoord = startLoc.getCol();
+       path.add(startLoc);
+       MazeCoord endLocation = this.getExitLoc();
+       MazeCoord newEndLocation = new MazeCoord(endLocation.getRow()+1,endLocation.getCol()+1);
+       if(startLoc.equals(newEndLocation))return path;
+       if(pathMaze[xCoord][yCoord+1]==false){
+           boolean[][] modifiedMaze = pathMaze;
+           modifiedMaze[xCoord][yCoord]=true;
+           success=isPath(new MazeCoord(xCoord,yCoord+1),modifiedMaze);}
+       if(success == false){
+       if(pathMaze[xCoord][yCoord-1]==false){
+            boolean[][] modifiedMaze = pathMaze;
+           modifiedMaze[xCoord][yCoord]=true;
+           success=isPath(new MazeCoord(xCoord,yCoord-1),modifiedMaze);
+       }}
+       if(success==false){
+           if(pathMaze[xCoord+1][yCoord]==false){
+                boolean[][] modifiedMaze = pathMaze;
+           modifiedMaze[xCoord][yCoord]=true;
+                success=isPath(new MazeCoord(xCoord+1,yCoord),modifiedMaze);
+       }}
+       if(success==false){
+           if(pathMaze[xCoord-1][yCoord]==false){
+               boolean[][] modifiedMaze = pathMaze;
+           modifiedMaze[xCoord][yCoord]=true;
+               success=isPath(new MazeCoord(xCoord-1,yCoord),modifiedMaze);
+       }}
+       path.pollLast();
+//       else{return false;}
+//       
+//       MazeCoord beginNode = startLoc;
+//       int beginRow = startLoc.getRow();
+//       int beginColumn = startLoc.getCol();
+       return path;
+//           return success;
+       }
+
+}
+    
+
